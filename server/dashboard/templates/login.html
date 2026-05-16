@@ -1,0 +1,589 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>A7._.GD mini EDR PRO | Secure Access</title>
+
+  <!-- SEO & Social Sharing Meta Tags -->
+  <meta name="description" content="A7._.GD mini EDR PRO - Advanced Endpoint Detection & Response System. Professional security monitoring, threat hunting, and automated response platform." />
+  <meta property="og:title" content="A7._.GD mini EDR PRO | Secure Access" />
+  <meta property="og:description" content="Advanced Endpoint Detection & Response System. Professional security monitoring and threat hunting platform." />
+  <meta property="og:image" content="/static/logo.png" />
+  <meta property="og:type" content="website" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="A7._.GD mini EDR PRO" />
+  <meta name="twitter:description" content="Advanced Endpoint Detection & Response System for professional security monitoring." />
+  <meta name="twitter:image" content="/static/logo.png" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=Space+Grotesk:wght@500;600;700&display=swap"
+    rel="stylesheet" />
+
+  <style>
+    :root {
+      --bg-base: #050505;
+      --bg-surface: #0a0a0c;
+      --bg-panel: #121214;
+      --bg-panel-hover: #18181b;
+      --border: rgba(255, 255, 255, 0.08);
+      --border-highlight: rgba(255, 255, 255, 0.15);
+      --text-primary: #f4f4f5;
+      --text-secondary: #a1a1aa;
+      --text-muted: #71717a;
+      --accent: #00e5ff;
+      --accent-glow: rgba(0, 229, 255, 0.2);
+      --critical: #ff2a55;
+      --low: #00e676;
+      --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: "Inter", system-ui, sans-serif;
+      background-color: var(--bg-base);
+      color: var(--text-primary);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      padding: 80px 20px;
+      overflow-y: auto;
+      position: relative;
+    }
+
+    /* ── Animated grid background ─────────────────────────────────────── */
+    .bg-grid {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      background-image:
+        linear-gradient(rgba(0, 229, 255, 0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0, 229, 255, 0.03) 1px, transparent 1px);
+      background-size: 40px 40px;
+      animation: gridPan 25s linear infinite;
+    }
+
+    @keyframes gridPan {
+      0% {
+        background-position: 0 0;
+      }
+
+      100% {
+        background-position: 40px 40px;
+      }
+    }
+
+    /* ── Glow orbs ────────────────────────────────────────────────────── */
+    .orb {
+      position: fixed;
+      z-index: 0;
+      border-radius: 50%;
+      filter: blur(80px);
+      opacity: 0.12;
+      pointer-events: none;
+    }
+
+    .orb-1 {
+      width: 400px;
+      height: 400px;
+      background: var(--accent);
+      top: -100px;
+      left: -100px;
+      animation: orbFloat 8s ease-in-out infinite alternate;
+    }
+
+    .orb-2 {
+      width: 300px;
+      height: 300px;
+      background: #7c3aed;
+      bottom: -80px;
+      right: -80px;
+      animation: orbFloat 11s ease-in-out infinite alternate-reverse;
+    }
+
+    @keyframes orbFloat {
+      from {
+        transform: translate(0, 0);
+      }
+
+      to {
+        transform: translate(40px, 30px);
+      }
+    }
+
+    /* ── Card ─────────────────────────────────────────────────────────── */
+    .card {
+      position: relative;
+      z-index: 1;
+      background: var(--bg-panel);
+      border: 1px solid var(--border-highlight);
+      border-radius: 20px;
+      padding: 48px 44px;
+      width: 100%;
+      max-width: 420px;
+      box-shadow: 0 0 0 1px rgba(0, 229, 255, 0.06),
+        0 24px 64px rgba(0, 0, 0, 0.7),
+        0 0 40px rgba(0, 229, 255, 0.05);
+      animation: cardIn 0.5s cubic-bezier(0.16, 1, 0.3, 1) both;
+    }
+
+    @keyframes cardIn {
+      from {
+        opacity: 0;
+        transform: translateY(24px) scale(0.97);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+
+    /* ── Logo area ────────────────────────────────────────────────────── */
+    .logo-wrap {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 36px;
+    }
+
+    .logo-wrap img {
+      width: 130px;
+      height: auto;
+      filter: drop-shadow(0 0 12px rgba(0, 229, 255, 0.35));
+    }
+
+    .logo-badge {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(0, 229, 255, 0.08);
+      border: 1px solid rgba(0, 229, 255, 0.2);
+      border-radius: 99px;
+      padding: 5px 14px;
+    }
+
+    .logo-badge .dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--accent);
+      box-shadow: 0 0 8px var(--accent);
+      animation: pulse 2s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+
+      0%,
+      100% {
+        opacity: 1;
+        transform: scale(1);
+      }
+
+      50% {
+        opacity: 0.5;
+        transform: scale(0.85);
+      }
+    }
+
+    .logo-badge span {
+      font-family: "IBM Plex Mono", monospace;
+      font-size: 11px;
+      color: var(--accent);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    /* ── Heading ──────────────────────────────────────────────────────── */
+    .card-title {
+      font-family: "Space Grotesk", sans-serif;
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--text-primary);
+      text-align: center;
+      margin-bottom: 6px;
+    }
+
+    .card-sub {
+      font-size: 13px;
+      color: var(--text-muted);
+      text-align: center;
+      margin-bottom: 32px;
+      font-family: "IBM Plex Mono", monospace;
+      letter-spacing: 0.02em;
+    }
+
+    /* ── Form fields ──────────────────────────────────────────────────── */
+    .field {
+      margin-bottom: 18px;
+    }
+
+    .field label {
+      display: block;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-secondary);
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+      margin-bottom: 8px;
+    }
+
+    .input-wrap {
+      position: relative;
+    }
+
+    .input-wrap svg {
+      position: absolute;
+      left: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-muted);
+      pointer-events: none;
+      width: 16px;
+      height: 16px;
+    }
+
+    .input-wrap input {
+      width: 100%;
+      padding: 12px 14px 12px 40px;
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      color: var(--text-primary);
+      font-size: 14px;
+      font-family: "Inter", sans-serif;
+      outline: none;
+      transition: border-color var(--transition), box-shadow var(--transition), background var(--transition);
+    }
+
+    .input-wrap input:focus {
+      border-color: var(--accent);
+      background: #0e0e12;
+      box-shadow: 0 0 0 3px rgba(0, 229, 255, 0.12);
+    }
+
+    .input-wrap input::placeholder {
+      color: var(--text-muted);
+    }
+
+    /* ── Show Password Checkbox ───────────────────────────────────────── */
+    .show-pw-wrap {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-top: -8px;
+      margin-bottom: 18px;
+      cursor: pointer;
+    }
+
+    .show-pw-wrap input[type="checkbox"] {
+      appearance: none;
+      width: 17px;
+      height: 17px;
+      border: 1.5px solid var(--border-highlight);
+      border-radius: 5px;
+      background: rgba(255, 255, 255, 0.02);
+      cursor: pointer;
+      position: relative;
+      transition: all 0.2s ease;
+    }
+
+    .show-pw-wrap input[type="checkbox"]:checked {
+      background: var(--accent);
+      border-color: var(--accent);
+      box-shadow: 0 0 10px var(--accent-glow);
+    }
+
+    .show-pw-wrap input[type="checkbox"]:checked::after {
+      content: '✔';
+      position: absolute;
+      color: var(--bg-base);
+      font-size: 11px;
+      font-weight: 900;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
+
+    .show-pw-wrap label {
+      font-size: 11px;
+      color: var(--text-muted);
+      cursor: pointer;
+      user-select: none;
+      font-family: "IBM Plex Mono", monospace;
+      letter-spacing: 0.05em;
+      font-weight: 600;
+      transition: color 0.2s ease;
+    }
+
+    .show-pw-wrap input[type="checkbox"]:checked + label {
+      color: var(--accent);
+    }
+
+    /* ── Error banner ─────────────────────────────────────────────────── */
+    .error-banner {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: rgba(255, 42, 85, 0.1);
+      border: 1px solid rgba(255, 42, 85, 0.3);
+      border-radius: 10px;
+      padding: 12px 14px;
+      margin-bottom: 20px;
+      font-size: 13px;
+      color: var(--critical);
+      animation: shake 0.35s ease;
+    }
+
+    @keyframes shake {
+
+      0%,
+      100% {
+        transform: translateX(0);
+      }
+
+      20%,
+      60% {
+        transform: translateX(-5px);
+      }
+
+      40%,
+      80% {
+        transform: translateX(5px);
+      }
+    }
+
+    .error-banner svg {
+      width: 16px;
+      height: 16px;
+      flex-shrink: 0;
+    }
+
+    /* ── Submit button ────────────────────────────────────────────────── */
+    .btn-login {
+      width: 100%;
+      margin-top: 8px;
+      padding: 13px;
+      background: linear-gradient(135deg, rgba(0, 229, 255, 0.15), rgba(0, 229, 255, 0.08));
+      border: 1px solid rgba(0, 229, 255, 0.35);
+      border-radius: 10px;
+      color: var(--accent);
+      font-size: 14px;
+      font-weight: 600;
+      font-family: "Space Grotesk", sans-serif;
+      letter-spacing: 0.04em;
+      cursor: pointer;
+      transition: background var(--transition), box-shadow var(--transition), transform var(--transition);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .btn-login:hover {
+      background: linear-gradient(135deg, rgba(0, 229, 255, 0.25), rgba(0, 229, 255, 0.15));
+      box-shadow: 0 0 20px rgba(0, 229, 255, 0.25);
+      transform: translateY(-1px);
+    }
+
+    .btn-login:active {
+      transform: translateY(0);
+    }
+
+    .btn-login svg {
+      width: 16px;
+      height: 16px;
+    }
+
+    /* ── Auth Links ────────────────────────────────────────────────────── */
+    .auth-utils {
+      display: flex;
+      justify-content: flex-end;
+      margin-bottom: 20px;
+    }
+
+    .auth-link {
+      font-size: 12px;
+      color: var(--text-muted);
+      text-decoration: none;
+      transition: color var(--transition);
+      font-weight: 500;
+    }
+
+    .auth-link:hover {
+      color: var(--accent);
+    }
+
+    .register-section {
+      text-align: center;
+      margin-top: 24px;
+      font-size: 13px;
+      color: var(--text-secondary);
+    }
+
+    .register-link {
+      color: var(--accent);
+      text-decoration: none;
+      font-weight: 600;
+      transition: var(--transition);
+      margin-left: 4px;
+    }
+
+    .register-link:hover {
+      text-decoration: underline;
+      filter: drop-shadow(0 0 8px var(--accent-glow));
+    }
+
+    /* ── Footer ───────────────────────────────────────────────────────── */
+    .card-footer {
+      margin-top: 28px;
+      padding-top: 20px;
+      border-top: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .card-footer span {
+      font-family: "IBM Plex Mono", monospace;
+      font-size: 11px;
+      color: var(--text-muted);
+      letter-spacing: 0.05em;
+    }
+
+    .shield-icon {
+      color: var(--text-muted);
+    }
+
+    .shield-icon svg {
+      width: 13px;
+      height: 13px;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="bg-grid"></div>
+  <div class="orb orb-1"></div>
+  <div class="orb orb-2"></div>
+
+  <div class="card">
+
+    <!-- Logo -->
+    <div class="logo-wrap">
+      <img src="/static/logo.png" alt="A7._.GD mini EDR PRO" />
+      <div class="logo-badge">
+        <span class="dot"></span>
+        <span>Secure Access Portal</span>
+      </div>
+    </div>
+
+    <p class="card-title">Welcome Back</p>
+    <p class="card-sub">// authenticate to continue</p>
+
+    <!-- Error message (rendered server-side by Jinja) -->
+    {% if error %}
+    <div class="error-banner">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+        stroke-linejoin="round">
+        <circle cx="12" cy="12" r="10" />
+        <line x1="12" y1="8" x2="12" y2="12" />
+        <line x1="12" y1="16" x2="12.01" y2="16" />
+      </svg>
+      {{ error }}
+    </div>
+    {% endif %}
+
+    <form method="POST" action="/login" autocomplete="off">
+
+      <div class="field">
+        <label>Email Address</label>
+        <div class="input-wrap">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"
+            stroke-linejoin="round">
+            <rect x="2" y="4" width="20" height="16" rx="2" />
+            <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" />
+          </svg>
+          <input type="email" name="email" placeholder="operator@domain.com" required autocomplete="username" />
+        </div>
+      </div>
+
+      <div class="field">
+        <label>Password</label>
+        <div class="input-wrap">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"
+            stroke-linejoin="round">
+            <rect x="3" y="11" width="18" height="11" rx="2" />
+            <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+          </svg>
+          <input type="password" name="password" id="pw-input" placeholder="••••••••••" required
+            autocomplete="current-password" />
+        </div>
+      </div>
+
+      <div class="show-pw-wrap">
+        <input type="checkbox" id="show-pw-check" onclick="togglePw()">
+        <label for="show-pw-check">SHOW PASSWORD</label>
+      </div>
+
+      <div class="auth-utils">
+        <a href="/forgot" class="auth-link">Forgot password?</a>
+      </div>
+
+      <button type="submit" class="btn-login">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+          stroke-linejoin="round">
+          <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4" />
+          <polyline points="10 17 15 12 10 7" />
+          <line x1="15" y1="12" x2="3" y2="12" />
+        </svg>
+        Access Control Center
+      </button>
+
+    </form>
+
+    <div class="register-section">
+      Don't have an account? <a href="/register" class="register-link">Create Account</a>
+    </div>
+
+    <div class="card-footer">
+      <span class="shield-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"
+          stroke-linejoin="round">
+          <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+        </svg>
+      </span>
+      <span>A7._.GD mini EDR PRO &nbsp;·&nbsp; Developed by <a href="https://github.com/ahmaddahb36" target="_blank"
+          style="color: var(--accent); text-decoration: none; font-weight: 600; opacity: 0.8;">A7_GD</a></span>
+    </div>
+
+  </div>
+
+  <script>
+    function togglePw() {
+      const inp = document.getElementById('pw-input');
+      const check = document.getElementById('show-pw-check');
+      inp.type = check.checked ? 'text' : 'password';
+    }
+  </script>
+
+</body>
+
+</html>

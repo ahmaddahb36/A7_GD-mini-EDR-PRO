@@ -1,0 +1,2247 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<title>A7._.GD mini EDR PRO | Control Center</title>
+
+	<!-- SEO & Social Sharing Meta Tags -->
+	<meta name="description"
+		content="A7._.GD mini EDR PRO - Advanced Endpoint Detection & Response System. Professional security monitoring, threat hunting, and automated response platform." />
+	<meta property="og:title" content="A7._.GD mini EDR PRO | Control Center" />
+	<meta property="og:description"
+		content="Advanced Endpoint Detection & Response System. Professional security monitoring and threat hunting platform." />
+	<meta property="og:image" content="/static/logo.png" />
+	<meta property="og:type" content="website" />
+	<meta name="twitter:card" content="summary_large_image" />
+	<meta name="twitter:title" content="A7._.GD mini EDR PRO" />
+	<meta name="twitter:description"
+		content="Advanced Endpoint Detection & Response System for professional security monitoring." />
+	<meta name="twitter:image" content="/static/logo.png" />
+
+	<!-- Fonts -->
+	<link rel="preconnect" href="https://fonts.googleapis.com" />
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+	<link
+		href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=Space+Grotesk:wght@500;600;700&display=swap"
+		rel="stylesheet" />
+
+	<!-- Icons (Lucide) -->
+	<script src="https://unpkg.com/lucide@latest"></script>
+
+	<!-- Chart.js -->
+	<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.2/dist/chart.umd.min.js"></script>
+
+	<style>
+		:root {
+			/* Premium Deep Dark Theme */
+			--bg-base: #050505;
+			--bg-surface: #0a0a0c;
+			--bg-panel: #121214;
+			--bg-panel-hover: #18181b;
+
+			--border: rgba(255, 255, 255, 0.08);
+			--border-highlight: rgba(255, 255, 255, 0.15);
+
+			--text-primary: #f4f4f5;
+			--text-secondary: #a1a1aa;
+			--text-muted: #71717a;
+
+			/* Accents & Status Alerts */
+			--accent: #00e5ff;
+			/* Cyan */
+			--accent-glow: rgba(0, 229, 255, 0.2);
+
+			--critical: #ff2a55;
+			/* Neon Red */
+			--critical-bg: rgba(255, 42, 85, 0.1);
+
+			--high: #ff8e00;
+			/* Orange */
+			--high-bg: rgba(255, 142, 0, 0.1);
+
+			--medium: #fbc02d;
+			/* Yellow */
+			--medium-bg: rgba(251, 192, 45, 0.1);
+
+			--low: #00e676;
+			/* Green */
+			--low-bg: rgba(0, 230, 118, 0.1);
+
+			--unknown: #94a3b8;
+			/* Slate */
+			--unknown-bg: rgba(148, 163, 184, 0.1);
+
+			--sidebar-width: 260px;
+			--transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+
+			--shadow-sm: 0 4px 12px rgba(0, 0, 0, 0.5);
+			--shadow-glow: 0 0 20px var(--accent-glow);
+		}
+
+		* {
+			box-sizing: border-box;
+		}
+
+		body {
+			margin: 0;
+			font-family: "Inter", system-ui, sans-serif;
+			background-color: var(--bg-base);
+			color: var(--text-primary);
+			min-height: 100vh;
+			display: flex;
+			overflow: hidden;
+			/* Prevent body scroll, handle scroll in main area */
+		}
+
+		/* Scrollbars */
+		::-webkit-scrollbar {
+			width: 8px;
+			height: 8px;
+		}
+
+		::-webkit-scrollbar-track {
+			background: var(--bg-base);
+		}
+
+		::-webkit-scrollbar-thumb {
+			background: #27272a;
+			border-radius: 4px;
+		}
+
+		::-webkit-scrollbar-thumb:hover {
+			background: #3f3f46;
+		}
+
+		.app-container {
+			display: flex;
+			width: 100%;
+			height: 100vh;
+		}
+
+		/* ================= SIDEBAR ================= */
+		.sidebar {
+			width: var(--sidebar-width);
+			background-color: var(--bg-surface);
+			border-right: 1px solid var(--border);
+			display: flex;
+			flex-direction: column;
+			z-index: 10;
+		}
+
+		.sidebar-header {
+			padding: 24px;
+			display: flex;
+			align-items: center;
+			gap: 12px;
+			border-bottom: 1px solid var(--border);
+		}
+
+		.sidebar-header svg,
+		.sidebar-header img {
+			color: var(--accent);
+			filter: drop-shadow(0 0 8px var(--accent-glow));
+		}
+
+		.brand-logo {
+			width: 34px;
+			height: 34px;
+			display: block;
+		}
+
+		.brand-logo .primary {
+			fill: #ffffff;
+		}
+
+		.brand-logo .accent {
+			fill: #204a8c;
+		}
+
+		.sidebar-header h1 {
+			margin: 0;
+			font-family: "Space Grotesk", sans-serif;
+			font-size: 20px;
+			font-weight: 700;
+			letter-spacing: -0.02em;
+		}
+
+		.nav-menu {
+			padding: 20px 12px;
+			display: flex;
+			flex-direction: column;
+			gap: 4px;
+			flex: 1;
+			overflow-y: auto;
+			scrollbar-width: thin;
+			scrollbar-color: rgba(0, 229, 255, 0.2) transparent;
+		}
+
+		/* Custom Scrollbar for Chrome/Safari/Edge */
+		.nav-menu::-webkit-scrollbar {
+			width: 4px;
+		}
+
+		.nav-menu::-webkit-scrollbar-track {
+			background: transparent;
+		}
+
+		.nav-menu::-webkit-scrollbar-thumb {
+			background: rgba(0, 229, 255, 0.1);
+			border-radius: 10px;
+			transition: var(--transition);
+		}
+
+		.nav-menu::-webkit-scrollbar-thumb:hover {
+			background: var(--accent);
+			box-shadow: 0 0 10px var(--accent-glow);
+		}
+
+		.nav-label {
+			font-size: 11px;
+			text-transform: uppercase;
+			letter-spacing: 0.1em;
+			color: var(--text-muted);
+			margin: 16px 0 8px 12px;
+			font-weight: 600;
+		}
+
+		.nav-item {
+			display: flex;
+			align-items: center;
+			gap: 12px;
+			padding: 12px 14px;
+			border-radius: 8px;
+			cursor: pointer;
+			color: var(--text-secondary);
+			transition: var(--transition);
+			font-weight: 500;
+			font-size: 14px;
+			border: 1px solid transparent;
+		}
+
+		.nav-item:hover {
+			background-color: var(--bg-panel);
+			color: var(--text-primary);
+		}
+
+		.nav-item.active {
+			background-color: var(--bg-panel);
+			color: var(--accent);
+			border-color: var(--border-highlight);
+			box-shadow: 0 0 15px rgba(0, 229, 255, 0.05);
+		}
+
+		.nav-item svg {
+			width: 18px;
+			height: 18px;
+		}
+
+		/* ── Agent Download Button ─────────────────────────────────────── */
+		.agent-download-wrap {
+			padding: 12px 12px 20px;
+			margin-top: auto;
+		}
+
+		.agent-download-btn {
+			display: flex;
+			align-items: center;
+			gap: 11px;
+			width: 100%;
+			padding: 13px 16px;
+			background: linear-gradient(135deg, rgba(0, 229, 255, 0.10), rgba(0, 229, 255, 0.04));
+			border: 1px solid rgba(0, 229, 255, 0.28);
+			border-radius: 10px;
+			color: var(--accent);
+			font-family: "Space Grotesk", sans-serif;
+			font-size: 13px;
+			font-weight: 600;
+			letter-spacing: 0.02em;
+			text-decoration: none;
+			cursor: pointer;
+			transition: var(--transition);
+			position: relative;
+			overflow: hidden;
+		}
+
+		.agent-download-btn::before {
+			content: '';
+			position: absolute;
+			inset: 0;
+			background: linear-gradient(135deg, rgba(0, 229, 255, 0.15), transparent);
+			opacity: 0;
+			transition: opacity var(--transition);
+		}
+
+		.agent-download-btn:hover {
+			border-color: rgba(0, 229, 255, 0.55);
+			box-shadow: 0 0 18px rgba(0, 229, 255, 0.18), inset 0 0 12px rgba(0, 229, 255, 0.04);
+			transform: translateY(-1px);
+		}
+
+		.agent-download-btn:hover::before {
+			opacity: 1;
+		}
+
+		.agent-download-btn:active {
+			transform: translateY(0);
+		}
+
+		.agent-download-btn svg {
+			width: 17px;
+			height: 17px;
+			flex-shrink: 0;
+		}
+
+		.agent-download-btn .btn-text {
+			display: flex;
+			flex-direction: column;
+			line-height: 1.2;
+		}
+
+		.agent-download-btn .btn-text span {
+			font-size: 10px;
+			font-family: "IBM Plex Mono", monospace;
+			color: var(--text-muted);
+			font-weight: 400;
+			letter-spacing: 0.04em;
+		}
+
+		.agent-download-btn .dl-icon {
+			margin-left: auto;
+			opacity: 0.5;
+			transition: opacity var(--transition), transform var(--transition);
+		}
+
+		.agent-download-btn:hover .dl-icon {
+			opacity: 1;
+			transform: translateY(2px);
+		}
+
+		/* ================= MAIN CONTENT ================= */
+		.main-content {
+			flex: 1;
+			display: flex;
+			flex-direction: column;
+			background: radial-gradient(circle at top right, rgba(0, 229, 255, 0.03), transparent 400px), var(--bg-base);
+			position: relative;
+			overflow-y: auto;
+		}
+
+		.topbar {
+			height: 70px;
+			padding: 0 32px;
+			display: flex;
+			align-items: center;
+			justify-content: space-between;
+			border-bottom: 1px solid var(--border);
+			background: rgba(10, 10, 12, 0.8);
+			backdrop-filter: blur(12px);
+			position: sticky;
+			top: 0;
+			z-index: 20;
+		}
+
+		.topbar-right {
+			display: flex;
+			align-items: center;
+			gap: 16px;
+		}
+
+		.stat-chip {
+			display: flex;
+			align-items: center;
+			gap: 8px;
+			font-family: "IBM Plex Mono", monospace;
+			font-size: 12px;
+			padding: 6px 14px;
+			background: var(--bg-panel);
+			border: 1px solid var(--border);
+			border-radius: 999px;
+			color: var(--text-secondary);
+		}
+
+		.stat-chip .dot {
+			width: 8px;
+			height: 8px;
+			border-radius: 50%;
+			background: var(--low);
+			box-shadow: 0 0 8px var(--low);
+		}
+
+		.view-section {
+			display: none;
+			padding: 32px;
+			animation: fadeIn 0.4s ease forwards;
+			max-width: 1600px;
+			margin: 0 auto;
+			width: 100%;
+		}
+
+		.view-section.active {
+			display: flex;
+			flex-direction: column;
+			gap: 24px;
+		}
+
+		.view-header {
+			margin-bottom: 8px;
+		}
+
+		.view-header h2 {
+			font-family: "Space Grotesk", sans-serif;
+			font-size: 28px;
+			margin: 0;
+			font-weight: 600;
+		}
+
+		.view-header p {
+			color: var(--text-secondary);
+			margin: 8px 0 0;
+		}
+
+		/* ================= PANELS & CARDS ================= */
+		.panel {
+			background: var(--bg-surface);
+			border: 1px solid var(--border);
+			border-radius: 12px;
+			padding: 24px;
+			box-shadow: var(--shadow-sm);
+			transition: var(--transition);
+			position: relative;
+			overflow: hidden;
+		}
+
+		.panel::before {
+			content: '';
+			position: absolute;
+			top: 0;
+			left: 0;
+			right: 0;
+			height: 1px;
+			background: linear-gradient(90deg, transparent, var(--border-highlight), transparent);
+			opacity: 0;
+			transition: var(--transition);
+		}
+
+		.panel:hover::before {
+			opacity: 1;
+		}
+
+		.panel-header {
+			font-family: "Space Grotesk", sans-serif;
+			font-size: 16px;
+			font-weight: 600;
+			margin: 0 0 20px 0;
+			display: flex;
+			align-items: center;
+			gap: 8px;
+		}
+
+		.panel-header svg {
+			color: var(--text-secondary);
+			width: 18px;
+			height: 18px;
+		}
+
+		.grid-2 {
+			display: grid;
+			grid-template-columns: repeat(2, 1fr);
+			gap: 24px;
+		}
+
+		.grid-3 {
+			display: grid;
+			grid-template-columns: repeat(3, 1fr);
+			gap: 24px;
+		}
+
+		.grid-4 {
+			display: grid;
+			grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+			gap: 16px;
+		}
+
+		.stat-card {
+			background: var(--bg-panel);
+			border: 1px solid var(--border);
+			border-radius: 12px;
+			padding: 20px;
+			display: flex;
+			flex-direction: column;
+			gap: 12px;
+			position: relative;
+			overflow: hidden;
+		}
+
+		.stat-title {
+			color: var(--text-secondary);
+			font-size: 12px;
+			text-transform: uppercase;
+			letter-spacing: 0.05em;
+			font-weight: 600;
+		}
+
+		.stat-value {
+			font-size: 32px;
+			font-family: "Space Grotesk", sans-serif;
+			font-weight: 700;
+			color: var(--text-primary);
+		}
+
+		/* ================= TABLES ================= */
+		.table-wrap {
+			overflow-x: auto;
+			border: 1px solid var(--border);
+			border-radius: 8px;
+		}
+
+		table {
+			width: 100%;
+			border-collapse: collapse;
+			text-align: left;
+			font-size: 13px;
+		}
+
+		th {
+			background: var(--bg-panel);
+			color: var(--text-muted);
+			font-weight: 600;
+			text-transform: uppercase;
+			font-size: 11px;
+			letter-spacing: 0.05em;
+			padding: 14px 16px;
+			border-bottom: 1px solid var(--border);
+			white-space: nowrap;
+		}
+
+		td {
+			padding: 14px 16px;
+			border-bottom: 1px solid var(--border);
+			color: var(--text-secondary);
+			font-family: "IBM Plex Mono", monospace;
+		}
+
+		tbody tr {
+			transition: background 0.2s;
+		}
+
+		tbody tr:hover {
+			background: var(--bg-panel-hover);
+		}
+
+		tbody tr:last-child td {
+			border-bottom: none;
+		}
+
+		/* ================= ALERTS & STATUS ================= */
+		.status-dot {
+			display: inline-block;
+			width: 8px;
+			height: 8px;
+			border-radius: 50%;
+			background: var(--low);
+			box-shadow: 0 0 8px var(--low);
+			margin-right: 8px;
+		}
+
+		.status-dot.offline {
+			background: var(--critical);
+			box-shadow: 0 0 8px var(--critical);
+		}
+
+		.severity-chip {
+			display: inline-flex;
+			align-items: center;
+			justify-content: center;
+			padding: 4px 10px;
+			border-radius: 4px;
+			font-size: 11px;
+			font-weight: 700;
+			text-transform: uppercase;
+			letter-spacing: 0.05em;
+			border: 1px solid transparent;
+		}
+
+		.severity-chip.critical {
+			color: var(--critical);
+			background: var(--critical-bg);
+			border-color: rgba(255, 42, 85, 0.2);
+		}
+
+		.severity-chip.high {
+			color: var(--high);
+			background: var(--high-bg);
+			border-color: rgba(255, 142, 0, 0.2);
+		}
+
+		.severity-chip.medium {
+			color: var(--medium);
+			background: var(--medium-bg);
+			border-color: rgba(251, 192, 45, 0.2);
+		}
+
+		.severity-chip.low {
+			color: var(--low);
+			background: var(--low-bg);
+			border-color: rgba(0, 230, 118, 0.2);
+		}
+
+		.severity-chip.unknown {
+			color: var(--unknown);
+			background: var(--unknown-bg);
+			border-color: rgba(148, 163, 184, 0.2);
+		}
+
+		.alert-list {
+			list-style: none;
+			padding: 0;
+			margin: 0;
+			display: flex;
+			flex-direction: column;
+			gap: 10px;
+		}
+
+		.alert-item {
+			background: var(--bg-panel);
+			border: 1px solid var(--border);
+			border-radius: 8px;
+			padding: 16px;
+			display: grid;
+			gap: 8px;
+			transition: var(--transition);
+		}
+
+		.alert-item:hover {
+			border-color: var(--border-highlight);
+			transform: translateY(-2px);
+			box-shadow: var(--shadow-sm);
+		}
+
+		.alert-meta {
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+			font-family: "IBM Plex Mono";
+			font-size: 12px;
+			color: var(--text-muted);
+		}
+
+		.alert-ip {
+			font-family: "IBM Plex Mono";
+			font-weight: 600;
+			color: var(--accent);
+		}
+
+		.alert-msg {
+			font-size: 14px;
+			line-height: 1.5;
+		}
+
+		.alert-extra {
+			font-size: 12px;
+			color: var(--text-muted);
+			font-family: "IBM Plex Mono", monospace;
+		}
+
+		.alert-handled {
+			color: var(--low);
+			font-weight: 700;
+		}
+
+		.action-chip {
+			display: inline-flex;
+			align-items: center;
+			justify-content: center;
+			padding: 4px 10px;
+			border-radius: 4px;
+			font-size: 11px;
+			font-weight: 700;
+			text-transform: uppercase;
+			letter-spacing: 0.05em;
+			color: var(--accent);
+			background: rgba(0, 229, 255, 0.08);
+			border: 1px solid rgba(0, 229, 255, 0.2);
+		}
+
+		.result-card {
+			background: var(--bg-panel);
+			border: 1px solid var(--border);
+			border-radius: 8px;
+			padding: 16px;
+			display: grid;
+			gap: 10px;
+			transition: var(--transition);
+		}
+
+		.result-card:hover {
+			border-color: var(--border-highlight);
+			transform: translateY(-2px);
+			box-shadow: var(--shadow-sm);
+		}
+
+		/* ================= FORMS & COMMANDS ================= */
+		.command-box {
+			display: grid;
+			gap: 16px;
+			background: var(--bg-panel);
+			padding: 20px;
+			border-radius: 8px;
+			border: 1px solid var(--border);
+		}
+
+		input,
+		textarea,
+		select {
+			width: 100%;
+			background: var(--bg-surface);
+			border: 1px solid var(--border);
+			border-radius: 6px;
+			padding: 12px 14px;
+			color: var(--text-primary);
+			font-family: "IBM Plex Mono", monospace;
+			font-size: 13px;
+			transition: var(--transition);
+		}
+
+		input:focus,
+		textarea:focus,
+		select:focus {
+			outline: none;
+			border-color: var(--accent);
+			box-shadow: 0 0 0 1px var(--accent);
+		}
+
+		.form-row {
+			display: flex;
+			gap: 12px;
+		}
+
+		.form-row>* {
+			flex: 1;
+		}
+
+		button {
+			background: transparent;
+			color: var(--text-primary);
+			border: 1px solid var(--border-highlight);
+			padding: 12px 20px;
+			border-radius: 6px;
+			font-family: "Inter", sans-serif;
+			font-size: 13px;
+			font-weight: 600;
+			cursor: pointer;
+			transition: var(--transition);
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			gap: 8px;
+		}
+
+		button:hover {
+			background: rgba(255, 255, 255, 0.05);
+		}
+
+		button.primary {
+			background: var(--accent);
+			color: var(--bg-base);
+			border: none;
+			box-shadow: 0 0 10px var(--accent-glow);
+		}
+
+		button.primary:hover {
+			background: #00b8cc;
+			box-shadow: 0 0 15px var(--accent-glow);
+			transform: translateY(-1px);
+		}
+
+		button.danger {
+			background: var(--critical);
+			color: white;
+			border: none;
+		}
+
+		button.danger:hover {
+			background: #d90033;
+		}
+
+		.command-status {
+			font-family: "IBM Plex Mono";
+			font-size: 12px;
+			color: var(--accent);
+			margin-top: 8px;
+		}
+
+		/* ================= TERMINAL/OUTPUT ================= */
+		.output-pre {
+			background: #000;
+			color: #00e5ff;
+			padding: 16px;
+			border-radius: 6px;
+			font-family: "IBM Plex Mono", monospace;
+			font-size: 12px;
+			white-space: pre-wrap;
+			word-break: break-all;
+			border: 1px solid rgba(0, 229, 255, 0.2);
+			max-height: 200px;
+			overflow-y: auto;
+		}
+
+		.output-item {
+			background: #000;
+			border: 1px solid var(--border);
+			padding: 12px;
+			border-radius: 6px;
+			margin-bottom: 8px;
+		}
+
+		.output-row {
+			display: flex;
+			gap: 16px;
+			margin-bottom: 4px;
+			font-family: "IBM Plex Mono";
+			font-size: 12px;
+		}
+
+		.output-label {
+			color: var(--text-muted);
+			width: 60px;
+			font-weight: 600;
+			text-transform: uppercase;
+		}
+
+		.output-value {
+			color: var(--text-secondary);
+			word-break: break-all;
+		}
+
+		/* Utils */
+		.empty {
+			color: var(--text-muted);
+			font-style: italic;
+			font-size: 13px;
+			padding: 20px;
+			text-align: center;
+		}
+
+		.chart-wrap {
+			height: 260px;
+			display: flex;
+			justify-content: center;
+			margin: 20px 0;
+		}
+
+		.user-profile {
+			display: flex;
+			align-items: center;
+			gap: 12px;
+			padding-left: 16px;
+			border-left: 1px solid var(--border);
+			margin-left: 8px;
+		}
+
+		.user-info {
+			display: flex;
+			flex-direction: column;
+			text-align: right;
+		}
+
+		.user-name {
+			font-size: 13px;
+			font-weight: 600;
+			color: var(--text-primary);
+		}
+
+		.user-email {
+			font-size: 11px;
+			color: var(--text-muted);
+		}
+
+		.user-avatar {
+			width: 36px;
+			height: 36px;
+			background: linear-gradient(135deg, var(--accent), #0091ff);
+			border-radius: 10px;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			color: var(--bg-base);
+			font-weight: 700;
+			font-size: 14px;
+			box-shadow: 0 0 15px var(--accent-glow);
+		}
+
+		.logout-btn {
+			padding: 8px;
+			color: var(--text-muted);
+			transition: var(--transition);
+			border: none;
+			background: transparent;
+			cursor: pointer;
+		}
+
+		.logout-btn:hover {
+			color: var(--critical);
+			transform: scale(1.1);
+		}
+
+		/* Developer Badge */
+		.dev-badge {
+			display: flex;
+			justify-content: center;
+			margin-top: -15px;
+			margin-bottom: 25px;
+			animation: fadeIn 0.8s ease-out;
+		}
+
+		.dev-badge-inner {
+			display: flex;
+			align-items: center;
+			gap: 8px;
+			background: rgba(0, 229, 255, 0.04);
+			border: 1px solid rgba(0, 229, 255, 0.15);
+			padding: 6px 14px;
+			border-radius: 99px;
+			font-size: 11px;
+			color: var(--text-muted);
+			transition: var(--transition);
+			text-decoration: none;
+			font-family: 'Space Grotesk', sans-serif;
+			letter-spacing: 0.02em;
+		}
+
+		.dev-badge-inner:hover {
+			background: rgba(0, 229, 255, 0.08);
+			border-color: var(--accent);
+			box-shadow: 0 0 15px var(--accent-glow);
+			transform: translateY(-2px);
+			color: var(--text-primary);
+		}
+
+		.dev-badge-inner i {
+			width: 14px;
+			height: 14px;
+			color: var(--accent);
+		}
+
+		.dev-badge-inner b {
+			color: var(--accent);
+			font-weight: 700;
+		}
+
+		@keyframes fadeIn {
+			from {
+				opacity: 0;
+				transform: translateY(10px);
+			}
+
+			to {
+				opacity: 1;
+				transform: translateY(0);
+			}
+		}
+
+		@media (max-width: 1024px) {
+			.grid-3 {
+				grid-template-columns: minmax(300px, 1fr) minmax(300px, 1.5fr);
+			}
+		}
+	</style>
+</head>
+
+<body>
+
+	<div class="app-container">
+
+		<!-- ================ SIDEBAR ================ -->
+		<aside class="sidebar">
+			<div class="sidebar-header" style="flex-direction: column; align-items: center; padding: 24px 16px 16px;">
+				<img src="/static/logo.png" alt="A7._.GD mini EDR PRO"
+					style="width: 180px; height: auto; margin-bottom: 4px;" />
+				<a href="https://github.com/ahmaddahb36" target="_blank" class="dev-badge-inner">
+					<i data-lucide="github"></i>
+					<span>Developed by <b>A7_GD</b></span>
+				</a>
+			</div>
+
+			<div class="nav-menu">
+				<div class="nav-label">Main</div>
+				<div class="nav-item active" data-target="view-dashboard">
+					<i data-lucide="layout-dashboard"></i> Dashboard
+				</div>
+				<div class="nav-item" data-target="view-endpoints">
+					<i data-lucide="servers"></i> Endpoints & Network
+				</div>
+
+				<div class="nav-label">Threats</div>
+				<div class="nav-item" data-target="view-investigations">
+					<i data-lucide="search"></i> Investigations
+				</div>
+
+				<div class="nav-label">Actions</div>
+				<div class="nav-item" data-target="view-response">
+					<i data-lucide="terminal-square"></i> Response Shell
+				</div>
+				<div class="nav-item" data-target="view-forensics">
+					<i data-lucide="file-search"></i> Forensics
+				</div>
+
+				<div class="nav-label">System</div>
+				<div class="nav-item" data-target="view-settings">
+					<i data-lucide="settings"></i> Configurations
+				</div>
+			</div>
+
+			<!-- ── Agent Download ── -->
+			<div class="agent-download-wrap">
+				<a href="/static/agent.rar" download class="agent-download-btn">
+					<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"
+						stroke-linejoin="round">
+						<path d="M21 16V20a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+						<polyline points="7 10 12 15 17 10" />
+						<line x1="12" y1="15" x2="12" y2="3" />
+					</svg>
+					<div class="btn-text">
+						Download Agent
+						<span>Windows · agent.rar</span>
+					</div>
+					<svg class="dl-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+						stroke-linecap="round" stroke-linejoin="round">
+						<polyline points="7 10 12 15 17 10" />
+					</svg>
+				</a>
+			</div>
+		</aside>
+
+		<!-- ================ MAIN CONTENT ================ -->
+		<main class="main-content">
+
+			<!-- Topbar -->
+			<header class="topbar">
+				<div style="font-family: 'Space Grotesk'; font-weight: 600; color: var(--text-muted);"
+					id="current-view-title">
+					Dashboard Overview
+				</div>
+				<div class="topbar-right">
+					<div class="stat-chip id">
+						<span class="dot"></span> <span id="live-status">Online</span>
+					</div>
+					<div class="stat-chip" id="last-refresh">--</div>
+
+					<div class="user-profile">
+						<div class="user-info">
+							<span class="user-name">{{ current_user.name }}</span>
+							<span class="user-email">{{ current_user.email }}</span>
+						</div>
+						<div class="user-avatar">
+							{{ current_user.name[0].upper() if current_user.name else 'U' }}
+						</div>
+						<a href="/logout" class="logout-btn" title="Sign Out">
+							<i data-lucide="log-out"></i>
+						</a>
+					</div>
+				</div>
+			</header>
+
+			<!-- ================= VIEW: DASHBOARD ================= -->
+			<div id="view-dashboard" class="view-section active">
+				<div class="view-header">
+					<h2>System Overview</h2>
+					<p>High-level metrics and active threats across all endpoints.</p>
+				</div>
+
+				<div class="grid-4">
+					<div class="stat-card">
+						<div class="stat-title">Total Endpoints</div>
+						<div class="stat-value" id="total-endpoints">{{ total }}</div>
+						<i data-lucide="laptop"
+							style="position:absolute; right: -10px; bottom: -10px; width: 80px; height: 80px; opacity: 0.05; color: var(--accent);"></i>
+					</div>
+					<div class="stat-card">
+						<div class="stat-title">Online Endpoints</div>
+						<div class="stat-value" style="color: var(--low);" id="online-endpoints">--</div>
+					</div>
+					<div class="stat-card">
+						<div class="stat-title">Offline Endpoints</div>
+						<div class="stat-value" style="color: var(--critical);" id="offline-endpoints">--</div>
+					</div>
+					<div class="stat-card">
+						<div class="stat-title">Recent Alerts</div>
+						<div class="stat-value" style="color: var(--high);" id="recent-alerts">{{ alerts|length }}</div>
+					</div>
+				</div>
+
+				<div class="grid-3" style="grid-template-columns: 1fr 2fr;">
+					<!-- Chart Panel -->
+					<div class="panel">
+						<h3 class="panel-header"><i data-lucide="pie-chart"></i> Alert Severity Distribution</h3>
+						<div class="chart-wrap">
+							<canvas id="alertChart"></canvas>
+						</div>
+						<div class="command-status" id="alert-summary-status"></div>
+					</div>
+
+					<!-- Live Alert Stream Panel -->
+					<div class="panel">
+						<h3 class="panel-header"><i data-lucide="activity"></i> Live Alert Stream</h3>
+						<ul class="alert-list" id="alert-stream"></ul>
+						<div class="empty" id="alert-stream-empty">No streaming alerts yet.</div>
+					</div>
+				</div>
+			</div>
+
+			<!-- ================= VIEW: ENDPOINTS & NETWORK ================= -->
+			<div id="view-endpoints" class="view-section">
+				<div class="view-header">
+					<h2>Endpoints & Network</h2>
+					<p>Active telemetry and agent status.</p>
+				</div>
+
+				<div class="panel">
+					<h3 class="panel-header"><i data-lucide="server"></i> Registered Endpoints</h3>
+					<div class="table-wrap">
+						<table>
+							<thead>
+								<tr>
+									<th>Status</th>
+									<th>IP Address</th>
+									<th>Hostname</th>
+									<th>OS Details</th>
+									<th>Last Seen</th>
+								</tr>
+							</thead>
+							<tbody id="endpoint-body"></tbody>
+						</table>
+					</div>
+					<div class="empty" id="endpoint-empty">No endpoints received yet.</div>
+				</div>
+
+				<div class="panel">
+					<h3 class="panel-header"><i data-lucide="network"></i> Network Traffic Summary</h3>
+					<div class="table-wrap">
+						<table>
+							<thead>
+								<tr>
+									<th>IP Address</th>
+									<th>Open Ports</th>
+									<th>Connections</th>
+									<th>Data Sent</th>
+									<th>Data Recv</th>
+									<th>Last Seen</th>
+								</tr>
+							</thead>
+							<tbody id="network-body"></tbody>
+						</table>
+					</div>
+					<div class="empty" id="network-empty">No network stats yet.</div>
+				</div>
+
+				<div class="panel">
+					<h3 class="panel-header"><i data-lucide="waypoints"></i> Network Connections (Sender/Receiver)</h3>
+					<div class="table-wrap">
+						<table>
+							<thead>
+								<tr>
+									<th>Endpoint</th>
+									<th>Sender IP</th>
+									<th>Sender Port</th>
+									<th>Receiver IP</th>
+									<th>Receiver Port</th>
+									<th>Direction</th>
+									<th>Protocol</th>
+									<th>Status</th>
+									<th>PID</th>
+									<th>Process</th>
+									<th>Time</th>
+								</tr>
+							</thead>
+							<tbody id="connection-body"></tbody>
+						</table>
+					</div>
+					<div class="empty" id="connection-empty">No network connections yet.</div>
+				</div>
+			</div>
+
+			<!-- ================= VIEW: INVESTIGATIONS ================= -->
+			<div id="view-investigations" class="view-section">
+				<div class="view-header">
+					<h2>Alerts & Event Logs</h2>
+					<p>Live alert timeline and raw telemetry logs (separated like SOC view).</p>
+				</div>
+
+				<div class="grid-2">
+					<div class="panel">
+						<div class="command-box">
+							<div class="form-row">
+								<input id="alert-ip" placeholder="Alert IP filter" />
+								<input id="alert-q" placeholder="Alert keyword / IOC" />
+							</div>
+							<div class="form-row">
+								<input id="alert-since" placeholder="Since (YYYY-MM-DD HH:MM:SS)" />
+								<input id="alert-until" placeholder="Until (YYYY-MM-DD HH:MM:SS)" />
+								<select id="alert-severity">
+									<option value="">All severities</option>
+									<option value="low">Low</option>
+									<option value="medium">Medium</option>
+									<option value="high">High</option>
+									<option value="critical">Critical</option>
+									<option value="unknown">Unknown</option>
+								</select>
+							</div>
+							<button class="primary" id="alert-search"><i data-lucide="shield-alert"></i> Search
+								Alerts</button>
+						</div>
+
+						<h3 class="panel-header" style="margin-top: 24px;"><i data-lucide="siren"></i> Alerts Timeline
+						</h3>
+						<ul class="alert-list" id="alert-results"></ul>
+						<div class="empty" id="alert-empty">Alerts will appear here.</div>
+					</div>
+
+					<div class="panel">
+						<div class="command-box">
+							<div class="form-row">
+								<input id="telemetry-ip" placeholder="Log IP filter" />
+								<input id="telemetry-q" placeholder="Search in SOC feed message" />
+							</div>
+							<div class="form-row">
+								<select id="telemetry-type">
+									<option value="">All sources</option>
+									<option value="alert">alert</option>
+									<option value="network">network</option>
+									<option value="system">system</option>
+									<option value="log:telemetry">log:telemetry</option>
+									<option value="log:network.summary">log:network.summary</option>
+									<option value="log:network.connection">log:network.connection</option>
+									<option value="log:system.summary">log:system.summary</option>
+								</select>
+								<button class="primary" id="telemetry-search"><i data-lucide="search-code"></i> Search
+									SOC Feed</button>
+								<button id="telemetry-export"><i data-lucide="download"></i> Export CSV</button>
+							</div>
+						</div>
+
+						<h3 class="panel-header" style="margin-top: 24px;"><i data-lucide="file-text"></i> SOC Live Feed
+						</h3>
+						<ul class="alert-list" id="telemetry-results"></ul>
+						<div class="empty" id="telemetry-empty">SOC feed will appear here.</div>
+					</div>
+				</div>
+			</div>
+
+			<!-- ================= VIEW: RESPONSE SHELL ================= -->
+			<div id="view-response" class="view-section">
+				<div class="view-header">
+					<h2>Response Shell</h2>
+					<p>Dispatch remote commands to connected endpoints.</p>
+				</div>
+
+				<div class="grid-3" style="grid-template-columns: 1fr 2.5fr;">
+					<div class="panel">
+						<h3 class="panel-header"><i data-lucide="terminal"></i> Dispatch Command</h3>
+						<div class="command-box" style="padding:0; background:transparent; border:none;">
+							<input id="cmd-ip" placeholder="Target Endpoint IP" />
+							<textarea id="cmd-text" rows="5" placeholder="Enter shell command..."></textarea>
+							<button class="primary" id="cmd-send"><i data-lucide="send"></i> Dispatch</button>
+							<div class="command-status" id="cmd-status">System ready.</div>
+						</div>
+					</div>
+
+					<div class="panel">
+						<h3 class="panel-header"><i data-lucide="history"></i> Command Results History</h3>
+						<div class="table-wrap">
+							<table style="table-layout: fixed;">
+								<thead>
+									<tr>
+										<th style="width: 50px;">ID</th>
+										<th style="width: 120px;">Target IP</th>
+										<th style="width: 90px;">Action</th>
+										<th style="width: 150px;">Command</th>
+										<th style="width: 80px;">Status</th>
+										<th style="width: 250px;">Output/Result</th>
+										<th style="width: 140px;">Timestamp</th>
+									</tr>
+								</thead>
+								<tbody id="command-body"></tbody>
+							</table>
+						</div>
+						<div class="empty" id="command-empty">No commands recorded.</div>
+					</div>
+				</div>
+			</div>
+
+			<!-- ================= VIEW: FORENSICS ================= -->
+			<div id="view-forensics" class="view-section">
+				<div class="view-header">
+					<h2>Forensics & Hunting</h2>
+					<p>Agent-level file searches and artifact retrieval.</p>
+				</div>
+
+				<div class="grid-2">
+					<div class="panel">
+						<h3 class="panel-header"><i data-lucide="scan"></i> Indicator Search (IOC)</h3>
+						<div class="command-box">
+							<input id="search-ip" placeholder="Target Endpoint IP (optional)" />
+							<input id="search-root" placeholder="Search root (optional, default /home/kali)" />
+							<input id="search-name" placeholder="Filename pattern (e.g. *.exe)" />
+							<input id="search-hash" placeholder="SHA256 Hash" />
+							<div class="form-row">
+								<button id="search-name-btn" style="flex:1;"><i data-lucide="file"></i> Search
+									Name</button>
+								<button id="search-hash-btn" style="flex:1;"><i data-lucide="hash"></i> Search
+									Hash</button>
+							</div>
+							<div class="command-status" id="search-status">Awaiting task.</div>
+						</div>
+					</div>
+
+					<div class="panel">
+						<h3 class="panel-header"><i data-lucide="download-cloud"></i> Artifact Extractor</h3>
+						<div class="command-box">
+							<input id="fetch-ip" placeholder="Target Endpoint IP" />
+							<input id="fetch-path" placeholder="Absolute file path on endpoint" />
+							<button class="primary" id="fetch-btn"><i data-lucide="download"></i> Extract
+								Artifact</button>
+							<div class="command-status" id="fetch-status">Awaiting task.</div>
+						</div>
+					</div>
+				</div>
+
+				<div class="panel">
+					<h3 class="panel-header"><i data-lucide="list"></i> Forensics Results</h3>
+					<div class="alert-list" id="forensics-results"></div>
+					<div class="empty" id="forensics-empty">No forensics results yet.</div>
+				</div>
+			</div>
+
+			<!-- ================= VIEW: SETTINGS ================= -->
+			<div id="view-settings" class="view-section">
+				<div class="view-header">
+					<h2>Configurations</h2>
+					<p>Database management and reset options.</p>
+				</div>
+
+				<div class="panel" style="max-width: 600px; margin-bottom: 24px;">
+					<h3 class="panel-header"><i data-lucide="key"></i> Account & API Access</h3>
+					<div class="command-box">
+						<div style="font-size: 13px; color: var(--text-secondary); margin-bottom: 8px;">Your unique
+							Agent API Key:</div>
+						<div class="output-pre"
+							style="display: flex; justify-content: space-between; align-items: center; border-color: var(--accent); color: var(--accent); background: rgba(0, 229, 255, 0.05);">
+							<span id="user-api-key">{{ user.api_key }}</span>
+							<button onclick="copyApiKey()"
+								style="padding: 4px 8px; font-size: 11px; border: none; background: rgba(0,229,255,0.1); color: var(--accent);">Copy</button>
+						</div>
+						<div style="font-size: 11px; color: var(--text-muted); margin-top: 8px;">Use this key in your
+							agent's config.py to link devices to your account.</div>
+					</div>
+				</div>
+
+				<div class="panel" style="max-width: 600px;">
+					<h3 class="panel-header" style="color: var(--critical);"><i data-lucide="triangle-alert"></i> Danger
+						Zone</h3>
+					<div class="command-box" style="border-color: rgba(255,42,85,0.2);">
+						<input id="reset-ip" placeholder="Endpoint IP to Purge" />
+						<div class="form-row">
+							<button class="danger" id="reset-ip-btn" style="flex:1;">Purge Agent Data</button>
+							<button class="danger" id="reset-all-btn" style="flex:1;">Factory Reset DB</button>
+						</div>
+						<div class="command-status" id="reset-status" style="color: var(--critical);">Use with absolute
+							caution.</div>
+					</div>
+				</div>
+			</div>
+
+		</main>
+	</div>
+
+	<div id="packet-modal"
+		style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.75); z-index:200; align-items:center; justify-content:center;">
+		<div
+			style="width:min(980px,90vw); max-height:80vh; overflow:auto; background:var(--bg-surface); border:1px solid var(--border-highlight); border-radius:12px; padding:20px;">
+			<div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+				<h3 style="margin:0; font-family:'Space Grotesk';">Connection Packet/Flow Details</h3>
+				<button id="packet-modal-close">Close</button>
+			</div>
+			<div id="packet-modal-meta" class="alert-extra" style="margin-bottom:10px;"></div>
+			<pre id="packet-modal-content" class="output-pre" style="max-height:60vh;"></pre>
+		</div>
+	</div>
+
+	<script>
+		// Initialize Icons
+		lucide.createIcons();
+
+		// Navigation Logic
+		const navItems = document.querySelectorAll('.nav-item');
+		const views = document.querySelectorAll('.view-section');
+		const currentViewTitle = document.getElementById('current-view-title');
+
+		navItems.forEach(item => {
+			item.addEventListener('click', (e) => {
+				navItems.forEach(n => n.classList.remove('active'));
+				views.forEach(v => v.classList.remove('active'));
+
+				const target = e.currentTarget;
+				target.classList.add('active');
+
+				const targetId = target.getAttribute('data-target');
+				document.getElementById(targetId).classList.add('active');
+
+				// Update title
+				currentViewTitle.textContent = target.textContent.trim();
+			});
+		});
+
+		// Data Binding Elements
+		const endpointBody = document.getElementById("endpoint-body");
+		const endpointEmpty = document.getElementById("endpoint-empty");
+		const alertList = document.getElementById("alert-list"); // Not used directly in new layout unless for general list
+		const alertResults = document.getElementById("alert-results");
+		const telemetryResults = document.getElementById("telemetry-results");
+		const alertStream = document.getElementById("alert-stream"); // Mapped to Dashboard
+		const alertStreamEmpty = document.getElementById("alert-stream-empty");
+		const totalEndpoints = document.getElementById("total-endpoints");
+		const recentAlerts = document.getElementById("recent-alerts");
+		const onlineEndpoints = document.getElementById("online-endpoints");
+		const offlineEndpoints = document.getElementById("offline-endpoints");
+		const networkBody = document.getElementById("network-body");
+		const networkEmpty = document.getElementById("network-empty");
+		const connectionBody = document.getElementById("connection-body");
+		const connectionEmpty = document.getElementById("connection-empty");
+		const alertEmpty = document.getElementById("alert-empty");
+		const telemetryEmpty = document.getElementById("telemetry-empty");
+		const commandBody = document.getElementById("command-body");
+		const commandEmpty = document.getElementById("command-empty");
+		const forensicsResults = document.getElementById("forensics-results");
+		const forensicsEmpty = document.getElementById("forensics-empty");
+		const lastRefresh = document.getElementById("last-refresh");
+		const alertSummaryStatus = document.getElementById("alert-summary-status");
+		const packetModal = document.getElementById("packet-modal");
+		const packetModalClose = document.getElementById("packet-modal-close");
+		const packetModalMeta = document.getElementById("packet-modal-meta");
+		const packetModalContent = document.getElementById("packet-modal-content");
+		const socSeenKeys = new Set();
+
+		// Chart Setup with Deep Dark Theme colors
+		Chart.defaults.color = '#a1a1aa';
+		Chart.defaults.font.family = '"Inter", sans-serif';
+
+		const chartCtx = document.getElementById("alertChart");
+		const alertChart = new Chart(chartCtx, {
+			type: "doughnut",
+			data: {
+				labels: ["Low", "Medium", "High", "Critical", "Unknown"],
+				datasets: [
+					{
+						data: [0, 0, 0, 0, 0],
+						backgroundColor: ["#00e676", "#fbc02d", "#ff8e00", "#ff2a55", "#475569"],
+						borderWidth: 0,
+						hoverOffset: 4
+					},
+				],
+			},
+			options: {
+				plugins: {
+					legend: {
+						position: "bottom",
+						labels: { padding: 20, usePointStyle: true, boxWidth: 8 }
+					}
+				},
+				cutout: "75%",
+				responsive: true,
+				maintainAspectRatio: false
+			},
+		});
+
+		function getSeverityClass(sev) {
+			const s = String(sev).toLowerCase();
+			if (['critical', 'high', 'medium', 'low'].includes(s)) return s;
+			return 'unknown';
+		}
+
+		function renderEndpoints(items) {
+			endpointBody.innerHTML = "";
+			if (!items.length) {
+				endpointEmpty.style.display = "block";
+				return;
+			}
+			endpointEmpty.style.display = "none";
+			items.forEach((e) => {
+				const row = document.createElement("tr");
+				row.innerHTML = `
+				<td>
+					<span class="status-dot ${e.status === "online" ? "" : "offline"}"></span>
+					<span style="font-size:12px; font-weight:600; text-transform:uppercase; color:${e.status === 'online' ? 'var(--low)' : 'var(--critical)'}">${e.status}</span>
+				</td>
+				<td style="color:var(--accent)">${escapeHtml(e.ip)}</td>
+				<td>${escapeHtml(e.hostname)}</td>
+				<td>${escapeHtml(e.os)}</td>
+				<td>${escapeHtml(e.last_seen)}</td>
+			`;
+				endpointBody.appendChild(row);
+			});
+			totalEndpoints.textContent = items.length;
+		}
+
+		function renderAlerts(items) {
+			alertStream.innerHTML = "";
+			if (!items.length) {
+				alertStreamEmpty.style.display = "block";
+				recentAlerts.textContent = "0";
+				return;
+			}
+			alertStreamEmpty.style.display = "none";
+			recentAlerts.textContent = items.length;
+
+			// We only populate alert stream here (Dashboard view)
+			items.slice(0, 8).forEach((a) => {
+				const details = parseAlertDetails(a.details);
+				const pidCandidate = extractPid(details);
+				const portCandidate = extractPort(details);
+				const connCandidate = extractConnection(details);
+				const li = document.createElement("li");
+				li.className = "alert-item";
+				const sevClass = getSeverityClass(a.severity);
+				li.innerHTML = `
+				<div class="alert-meta">
+					<span class="severity-chip ${sevClass}">${escapeHtml(a.severity)}</span>
+					<span>${escapeHtml(a.time)}</span>
+				</div>
+				<div class="alert-ip">${escapeHtml(a.ip)}</div>
+				<div class="alert-msg">${escapeHtml(a.message)}</div>
+				<div class="alert-extra">
+					ID:${escapeHtml(a.alert_id || "N/A")} | ${escapeHtml(a.technique_id || "N/A")} | ${escapeHtml(a.tactic || "N/A")} | ${escapeHtml(a.source || "N/A")}
+					${a.handled ? ` | <span class="alert-handled">Handled ✓ ${escapeHtml(a.handled_time || "")}</span>` : ""}
+				</div>
+				<div class="form-row" style="align-items:center;">
+					<label style="display:flex; align-items:center; gap:8px; font-size:12px; color:var(--text-secondary);">
+						<input type="checkbox" class="alert-handle-toggle" data-ip="${escapeHtml(a.ip)}" data-alert-id="${escapeHtml(a.alert_id || "")}" ${a.handled ? "checked" : ""} />
+						Handled
+					</label>
+				</div>
+				<div class="form-row">
+					<button class="alert-action" data-action="kill_process" data-ip="${escapeHtml(a.ip)}" data-pid="${escapeHtml(pidCandidate || "")}">Kill Process</button>
+					<button class="alert-action" data-action="close_port" data-ip="${escapeHtml(a.ip)}" data-port="${escapeHtml(portCandidate || "")}">Close Port</button>
+					<button class="alert-action" data-action="kill_connection" data-ip="${escapeHtml(a.ip)}" data-pid="${escapeHtml(connCandidate.pid || "")}" data-laddr="${escapeHtml(connCandidate.laddr || "")}" data-raddr="${escapeHtml(connCandidate.raddr || "")}">Kill Connection</button>
+				</div>
+			`;
+				alertStream.appendChild(li);
+			});
+		}
+
+		function renderNetwork(items) {
+			networkBody.innerHTML = "";
+			if (!items.length) {
+				networkEmpty.style.display = "block";
+				return;
+			}
+			networkEmpty.style.display = "none";
+			items.forEach((n) => {
+				const row = document.createElement("tr");
+				row.innerHTML = `
+				<td style="color:var(--accent)">${escapeHtml(n.ip)}</td>
+				<td>${escapeHtml((n.ports || []).slice(0, 8).join(", "))}</td>
+				<td>${n.conn_count}</td>
+				<td style="color:var(--text-primary)">${formatBytes(n.bytes_sent)}</td>
+				<td style="color:var(--text-primary)">${formatBytes(n.bytes_recv)}</td>
+				<td>${escapeHtml(n.time || "-")}</td>
+			`;
+				networkBody.appendChild(row);
+			});
+		}
+
+		function renderAlertResults(items) {
+			alertResults.innerHTML = "";
+			if (!items.length) {
+				alertEmpty.style.display = "block";
+				return;
+			}
+			alertEmpty.style.display = "none";
+			items.slice(0, 120).forEach((a) => {
+				const details = parseAlertDetails(a.details);
+				const pidCandidate = extractPid(details);
+				const portCandidate = extractPort(details);
+				const connCandidate = extractConnection(details);
+				const li = document.createElement("li");
+				li.className = "alert-item";
+				const sevClass = getSeverityClass(a.severity);
+				li.innerHTML = `
+				<div class="alert-meta">
+					<span class="severity-chip ${sevClass}">${escapeHtml(a.severity)}</span>
+					<span>${escapeHtml(a.time)}</span>
+				</div>
+				<div class="alert-ip">${escapeHtml(a.ip)}</div>
+				<div class="alert-msg">${escapeHtml(a.message)}</div>
+				<div class="alert-extra">
+					ID:${escapeHtml(a.alert_id || "N/A")} | ${escapeHtml(a.technique_id || "N/A")} | ${escapeHtml(a.tactic || "N/A")} | ${escapeHtml(a.source || "N/A")}
+					${a.handled ? ` | <span class="alert-handled">Handled ✓ ${escapeHtml(a.handled_time || "")}</span>` : ""}
+				</div>
+				<div class="form-row" style="align-items:center;">
+					<label style="display:flex; align-items:center; gap:8px; font-size:12px; color:var(--text-secondary);">
+						<input type="checkbox" class="alert-handle-toggle" data-ip="${escapeHtml(a.ip)}" data-alert-id="${escapeHtml(a.alert_id || "")}" ${a.handled ? "checked" : ""} />
+						Handled
+					</label>
+				</div>
+				<div class="form-row">
+					<button class="alert-action" data-action="kill_process" data-ip="${escapeHtml(a.ip)}" data-pid="${escapeHtml(pidCandidate || "")}">Kill Process</button>
+					<button class="alert-action" data-action="close_port" data-ip="${escapeHtml(a.ip)}" data-port="${escapeHtml(portCandidate || "")}">Close Port</button>
+					<button class="alert-action" data-action="kill_connection" data-ip="${escapeHtml(a.ip)}" data-pid="${escapeHtml(connCandidate.pid || "")}" data-laddr="${escapeHtml(connCandidate.laddr || "")}" data-raddr="${escapeHtml(connCandidate.raddr || "")}">Kill Connection</button>
+				</div>
+			`;
+				alertResults.appendChild(li);
+			});
+		}
+
+		function renderConnections(items) {
+			connectionBody.innerHTML = "";
+			if (!items.length) {
+				connectionEmpty.style.display = "block";
+				return;
+			}
+			connectionEmpty.style.display = "none";
+			items.slice(0, 300).forEach((conn) => {
+				const row = document.createElement("tr");
+				row.style.cursor = "pointer";
+				row.dataset.details = JSON.stringify(conn.details || {});
+				row.dataset.meta = `${conn.sender_ip || "-"}:${conn.sender_port || 0} -> ${conn.receiver_ip || "-"}:${conn.receiver_port || 0} | dir=${conn.direction || "unknown"} | ${conn.protocol || "-"} | pid=${conn.pid || 0}`;
+				row.innerHTML = `
+				<td style="color:var(--accent)">${escapeHtml(conn.ip || "-")}</td>
+				<td>${escapeHtml(conn.sender_ip || "-")}</td>
+				<td>${escapeHtml(conn.sender_port || 0)}</td>
+				<td>${escapeHtml(conn.receiver_ip || "-")}</td>
+				<td>${escapeHtml(conn.receiver_port || 0)}</td>
+				<td>${escapeHtml(conn.direction || "unknown")}</td>
+				<td>${escapeHtml(conn.protocol || "-")}</td>
+				<td>${escapeHtml(conn.status || "-")}</td>
+				<td>${escapeHtml(conn.pid || 0)}</td>
+				<td>${escapeHtml(conn.process_name || "-")}</td>
+				<td>${escapeHtml(conn.time || "-")}</td>
+			`;
+				connectionBody.appendChild(row);
+			});
+		}
+
+		function renderTelemetryLogs(items, replace = false) {
+			if (replace) {
+				telemetryResults.innerHTML = "";
+				socSeenKeys.clear();
+			}
+			if (!items.length && !telemetryResults.children.length) {
+				telemetryEmpty.style.display = "block";
+				return;
+			}
+			telemetryEmpty.style.display = telemetryResults.children.length ? "none" : "block";
+
+			const toRender = items.slice(0, 300);
+			for (let i = toRender.length - 1; i >= 0; i -= 1) {
+				const entry = toRender[i];
+				const rowKey = `${entry.time}|${entry.ip}|${entry.source_type || entry.type}|${entry.message}`;
+				if (socSeenKeys.has(rowKey)) continue;
+				socSeenKeys.add(rowKey);
+				const li = document.createElement("li");
+				li.className = "alert-item";
+				const details = typeof entry.details === "string" ? entry.details : JSON.stringify(entry.details || {});
+				const sourceType = entry.source_type || entry.type || "log";
+				const extra = `${entry.technique_id || "N/A"} | ${entry.tactic || "N/A"} | ${sourceType}`;
+				li.innerHTML = `
+				<div class="alert-meta">
+					<span class="action-chip">${escapeHtml(sourceType)}</span>
+					<span>${escapeHtml(entry.time || "-")}</span>
+				</div>
+				<div class="alert-ip">${escapeHtml(entry.ip || "-")}</div>
+				<div class="alert-msg">${escapeHtml(entry.message || "")}</div>
+				<div class="alert-extra">${escapeHtml(extra)}</div>
+				${details && details !== "{}" ? `<div class="output-pre" style="max-height:120px">${escapeHtml(details)}</div>` : ""}
+			`;
+				telemetryResults.prepend(li);
+			}
+
+			while (telemetryResults.children.length > 2000) {
+				telemetryResults.removeChild(telemetryResults.lastElementChild);
+			}
+			telemetryEmpty.style.display = telemetryResults.children.length ? "none" : "block";
+		}
+
+		function renderCommands(items) {
+			commandBody.innerHTML = "";
+			if (!items.length) {
+				commandEmpty.style.display = "block";
+				return;
+			}
+			commandEmpty.style.display = "none";
+			const excludeActions = new Set(["search_name", "search_hash", "fetch_file"]);
+			items.filter((c) => !excludeActions.has(String(c.action || "").toLowerCase()))
+				.slice(0, 30)
+				.forEach((c) => {
+					const row = document.createElement("tr");
+					const outputHtml = formatCommandOutput(c);
+
+					// Highlight status
+					let statusColor = "var(--text-muted)";
+					if (c.status === "pending") statusColor = "var(--medium)";
+					if (c.status === "completed" || c.status === "success") statusColor = "var(--low)";
+					if (c.status === "failed" || c.status === "error") statusColor = "var(--critical)";
+
+					row.innerHTML = `
+				<td>${c.id}</td>
+				<td style="color:var(--accent)">${escapeHtml(c.ip)}</td>
+				<td><span class="stat-chip">${escapeHtml(c.action || "shell")}</span></td>
+				<td><code style="background:var(--bg-base); padding:4px 6px; border-radius:4px;">${escapeHtml(c.command)}</code></td>
+				<td style="font-weight:600; text-transform:uppercase; font-size:11px; color:${statusColor}">${escapeHtml(c.status)}</td>
+				<td style="padding: 8px;">${outputHtml}</td>
+				<td>${escapeHtml(c.created_time || "-")}</td>
+			`;
+					commandBody.appendChild(row);
+				});
+		}
+
+		function renderForensicsResults(items) {
+			if (!forensicsResults || !forensicsEmpty) return;
+			forensicsResults.innerHTML = "";
+			const actions = new Set(["search_name", "search_hash", "fetch_file"]);
+			const ipFilter = document.getElementById("search-ip")?.value.trim() || "";
+			const fetchIp = document.getElementById("fetch-ip")?.value.trim() || "";
+			const filterIp = ipFilter || fetchIp;
+
+			const filtered = items.filter((c) => {
+				const action = String(c.action || "").toLowerCase();
+				if (!actions.has(action)) return false;
+				if (!filterIp) return true;
+				return String(c.ip || "") === filterIp;
+			});
+
+			if (!filtered.length) {
+				forensicsEmpty.style.display = "block";
+				return;
+			}
+			forensicsEmpty.style.display = "none";
+
+			filtered.slice(0, 20).forEach((c) => {
+				const card = document.createElement("div");
+				card.className = "result-card";
+				card.innerHTML = `
+				<div class="alert-meta">
+					<span class="action-chip">${escapeHtml(c.action || "-")}</span>
+					<span>${escapeHtml(c.created_time || "-")}</span>
+				</div>
+				<div class="alert-ip">${escapeHtml(c.ip || "-")}</div>
+				<div class="alert-msg">${escapeHtml(c.command || "")}</div>
+				<div>${formatCommandOutput(c)}</div>
+			`;
+				forensicsResults.appendChild(card);
+			});
+		}
+
+		function formatCommandOutput(cmd) {
+			const raw = cmd.output || "";
+			if (!raw) return '<span style="color:var(--text-muted)">-</span>';
+
+			const action = (cmd.action || "").toLowerCase();
+			if (action === "search_name" || action === "search_hash") {
+				try {
+					let parsed = JSON.parse(raw);
+					if (!parsed || typeof parsed !== "object") {
+						throw new Error("Invalid JSON payload");
+					}
+					if (!Array.isArray(parsed.matches) && typeof raw === "string") {
+						const jsonBlocks = raw.match(/\{[\s\S]*?\}/g);
+						if (jsonBlocks && jsonBlocks.length) {
+							parsed = JSON.parse(jsonBlocks[jsonBlocks.length - 1]);
+						}
+					}
+					const matches = Array.isArray(parsed.matches) ? parsed.matches : [];
+					if (!matches.length) return '<span style="color:var(--text-muted)">No matches</span>';
+
+					const rows = matches.map((m) => {
+						const yara = Array.isArray(m.yara) && m.yara.length ? m.yara.join(", ") : "-";
+						return `
+						<div class="output-item">
+							<div class="output-row"><div class="output-label">PATH</div><div class="output-value">${escapeHtml(m.path || "-")}</div></div>
+							<div class="output-row"><div class="output-label">SHA256</div><div class="output-value" style="color:var(--medium)">${escapeHtml(m.sha256 || "-")}</div></div>
+							<div class="output-row"><div class="output-label">YARA</div><div class="output-value" style="color:var(--critical)">${escapeHtml(yara)}</div></div>
+						</div>
+					`;
+					}).join("");
+					return `<div>${rows}</div>`;
+				} catch (err) {
+					try {
+						const jsonBlocks = raw.match(/\{[\s\S]*?\}/g);
+						if (jsonBlocks && jsonBlocks.length) {
+							const parsed = JSON.parse(jsonBlocks[jsonBlocks.length - 1]);
+							const matches = Array.isArray(parsed.matches) ? parsed.matches : [];
+							if (!matches.length) return '<span style="color:var(--text-muted)">No matches</span>';
+							const rows = matches.map((m) => {
+								const yara = Array.isArray(m.yara) && m.yara.length ? m.yara.join(", ") : "-";
+								return `
+								<div class="output-item">
+									<div class="output-row"><div class="output-label">PATH</div><div class="output-value">${escapeHtml(m.path || "-")}</div></div>
+									<div class="output-row"><div class="output-label">SHA256</div><div class="output-value" style="color:var(--medium)">${escapeHtml(m.sha256 || "-")}</div></div>
+									<div class="output-row"><div class="output-label">YARA</div><div class="output-value" style="color:var(--critical)">${escapeHtml(yara)}</div></div>
+								</div>
+							`;
+							}).join("");
+							return `<div>${rows}</div>`;
+						}
+					} catch (innerErr) {
+						return `<div class="output-pre">${escapeHtml(raw)}</div>`;
+					}
+					return `<div class="output-pre">${escapeHtml(raw)}</div>`;
+				}
+			}
+			return `<div class="output-pre">${escapeHtml(raw)}</div>`;
+		}
+
+		// ================= API FETCHERS =================
+		async function refreshEndpoints() {
+			try {
+				const res = await fetch("/api/endpoints");
+				const data = await res.json();
+				renderEndpoints(data.endpoints || []);
+			} catch (err) { }
+		}
+
+		async function refreshEndpointSummary() {
+			try {
+				const res = await fetch("/api/endpoints/summary");
+				const data = await res.json();
+				if (!data.ok) return;
+
+				onlineEndpoints.textContent = data.online;
+				offlineEndpoints.textContent = data.offline;
+				totalEndpoints.textContent = data.total;
+
+				const statusEl = document.getElementById("live-status");
+				const dotEl = statusEl.previousElementSibling;
+				if (data.online > 0) {
+					statusEl.textContent = "System Online";
+					statusEl.style.color = "var(--text-secondary)";
+					dotEl.className = "dot";
+				} else {
+					statusEl.textContent = "Agents Offline";
+					statusEl.style.color = "var(--critical)";
+					dotEl.className = "dot offline";
+				}
+			} catch (err) { }
+		}
+
+		async function refreshAlerts() {
+			try {
+				const res = await fetch("/api/alerts");
+				const data = await res.json();
+				const alerts = data.alerts || [];
+				renderAlerts(alerts);
+				renderAlertResults(alerts);
+			} catch (err) { }
+		}
+
+		async function refreshTelemetryLogs() {
+			try {
+				const res = await fetch("/api/soc/feed?limit=250");
+				const data = await res.json();
+				renderTelemetryLogs(data.feed || [], false);
+			} catch (err) { }
+		}
+
+		async function refreshNetwork() {
+			try {
+				const res = await fetch("/api/network/summary");
+				const data = await res.json();
+				renderNetwork(data.network || []);
+			} catch (err) { }
+		}
+
+		async function refreshConnections() {
+			try {
+				const res = await fetch("/api/network/connections?limit=300");
+				const data = await res.json();
+				renderConnections(data.connections || []);
+			} catch (err) { }
+		}
+
+		async function refreshCommands() {
+			try {
+				const res = await fetch("/api/commands");
+				const data = await res.json();
+				renderCommands(data.commands || []);
+				renderForensicsResults(data.commands || []);
+			} catch (err) { }
+		}
+
+		async function refreshSummary() {
+			try {
+				const res = await fetch("/api/alerts/summary");
+				const data = await res.json();
+				alertSummaryStatus.textContent = "";
+				alertChart.data.datasets[0].data = [
+					data.low || 0,
+					data.medium || 0,
+					data.high || 0,
+					data.critical || 0,
+					data.unknown || 0,
+				];
+				alertChart.update();
+			} catch (err) {
+				alertSummaryStatus.textContent = "Failed to load summary";
+			}
+		}
+
+		async function refreshAll() {
+			try {
+				await Promise.all([
+					refreshEndpoints(),
+					refreshEndpointSummary(),
+					refreshAlerts(),
+					refreshSummary(),
+					refreshNetwork(),
+					refreshConnections(),
+					refreshCommands(),
+					refreshTelemetryLogs(),
+				]);
+
+				const now = new Date();
+				lastRefresh.textContent = `Sync: ${now.toLocaleTimeString()}`;
+			} catch (err) {
+				console.error(err);
+			}
+		}
+
+		// ================= EVENT LISTENERS =================
+
+		// Command Dispatch
+		const cmdBtn = document.getElementById("cmd-send");
+		const cmdStatus = document.getElementById("cmd-status");
+		cmdBtn.addEventListener("click", async () => {
+			const ip = document.getElementById("cmd-ip").value.trim();
+			const command = document.getElementById("cmd-text").value.trim();
+			if (!ip || !command) {
+				cmdStatus.textContent = "Please provide target IP and command payload.";
+				return;
+			}
+			cmdStatus.textContent = "Establishing connection...";
+			try {
+				const res = await fetch("/api/commands", {
+					method: "POST",
+					headers: { "Content-Type": "application/json" },
+					body: JSON.stringify({ ip, command, action: "shell" }),
+				});
+				const data = await res.json();
+				cmdStatus.textContent = data.ok ? "Command payload injected to queue." : (data.error || "Failed to inject.");
+				setTimeout(() => { document.getElementById("cmd-text").value = ""; }, 1000);
+				refreshCommands(); // Immediate refresh
+			} catch (e) {
+				cmdStatus.textContent = "API error.";
+			}
+		});
+
+		// Forensics: Search Name
+		document.getElementById("search-name-btn").addEventListener("click", async () => {
+			const ip = document.getElementById("search-ip").value.trim();
+			const root = document.getElementById("search-root").value.trim();
+			const query = document.getElementById("search-name").value.trim();
+			const searchStatus = document.getElementById("search-status");
+			if (!ip || !query) { searchStatus.textContent = "Provide IP and pattern."; return; }
+			searchStatus.textContent = "Queueing scan...";
+			const res = await fetch("/api/commands", {
+				method: "POST",
+				headers: { "Content-Type": "application/json" },
+				body: JSON.stringify({ ip, action: "search_name", payload: { query, roots: root ? [root] : undefined } }),
+			});
+			const data = await res.json();
+			searchStatus.textContent = data.ok ? "IOC scan registered." : "Error.";
+			refreshCommands();
+		});
+
+		// Forensics: Search Hash
+		document.getElementById("search-hash-btn").addEventListener("click", async () => {
+			const ip = document.getElementById("search-ip").value.trim();
+			const root = document.getElementById("search-root").value.trim();
+			const query = document.getElementById("search-hash").value.trim();
+			const searchStatus = document.getElementById("search-status");
+			if (!ip || !query) { searchStatus.textContent = "Provide IP and SHA256."; return; }
+			searchStatus.textContent = "Queueing scan...";
+			const res = await fetch("/api/commands", {
+				method: "POST",
+				headers: { "Content-Type": "application/json" },
+				body: JSON.stringify({ ip, action: "search_hash", payload: { query, roots: root ? [root] : undefined } }),
+			});
+			const data = await res.json();
+			searchStatus.textContent = data.ok ? "IOC scan registered." : "Error.";
+			refreshCommands();
+		});
+
+		// Forensics: Fetch File
+		document.getElementById("fetch-btn").addEventListener("click", async () => {
+			const ip = document.getElementById("fetch-ip").value.trim();
+			const path = document.getElementById("fetch-path").value.trim();
+			const fetchStatus = document.getElementById("fetch-status");
+			if (!ip || !path) { fetchStatus.textContent = "Provide IP and absolute path."; return; }
+			fetchStatus.textContent = "Queueing extraction request...";
+			const res = await fetch("/api/commands", {
+				method: "POST",
+				headers: { "Content-Type": "application/json" },
+				body: JSON.stringify({ ip, action: "fetch_file", payload: { path } }),
+			});
+			const data = await res.json();
+			fetchStatus.textContent = data.ok ? "Extraction queued." : "Error.";
+			refreshCommands();
+		});
+
+		// Alert Search
+		document.getElementById("alert-search").addEventListener("click", async () => {
+			const ip = document.getElementById("alert-ip").value.trim();
+			const q = document.getElementById("alert-q").value.trim();
+			const since = document.getElementById("alert-since").value.trim();
+			const until = document.getElementById("alert-until").value.trim();
+			const severity = document.getElementById("alert-severity").value.trim();
+
+			const params = new URLSearchParams();
+			if (ip) params.append("ip", ip);
+			if (q) params.append("q", q);
+			if (since) params.append("since", since);
+			if (until) params.append("until", until);
+			if (severity) params.append("severity", severity);
+
+			document.getElementById("alert-empty").textContent = "Running alert query...";
+			try {
+				const res = await fetch(`/api/alerts/search?${params.toString()}`);
+				const data = await res.json();
+				renderAlertResults(data.alerts || []);
+			} catch (e) {
+				document.getElementById("alert-empty").textContent = "Alert query failed.";
+			}
+		});
+
+		// Telemetry Log Search
+		document.getElementById("telemetry-search").addEventListener("click", async () => {
+			const ip = document.getElementById("telemetry-ip").value.trim();
+			const q = document.getElementById("telemetry-q").value.trim();
+			const source = document.getElementById("telemetry-type").value.trim();
+
+			const params = new URLSearchParams();
+			if (ip) params.append("ip", ip);
+			if (q) params.append("q", q);
+			if (source) params.append("source", source);
+			params.append("limit", "300");
+
+			document.getElementById("telemetry-empty").textContent = "Running SOC feed query...";
+			try {
+				const res = await fetch(`/api/soc/feed?${params.toString()}`);
+				const data = await res.json();
+				renderTelemetryLogs(data.feed || [], true);
+			} catch (e) {
+				document.getElementById("telemetry-empty").textContent = "SOC query failed.";
+			}
+		});
+
+		document.getElementById("telemetry-export").addEventListener("click", () => {
+			const ip = document.getElementById("telemetry-ip").value.trim();
+			const q = document.getElementById("telemetry-q").value.trim();
+			const source = document.getElementById("telemetry-type").value.trim();
+			const params = new URLSearchParams();
+			if (ip) params.append("ip", ip);
+			if (q) params.append("q", q);
+			if (source) params.append("source", source);
+			params.append("limit", "20000");
+			window.open(`/api/soc/export.csv?${params.toString()}`, "_blank");
+		});
+
+		// Settings Reset
+		const resetStatus = document.getElementById("reset-status");
+		document.getElementById("reset-ip-btn").addEventListener("click", async () => {
+			const ip = document.getElementById("reset-ip").value.trim();
+			if (!ip) { resetStatus.textContent = "Provide target IP."; return; }
+			resetStatus.textContent = "Purging...";
+			const res = await fetch("/api/reset", {
+				method: "POST",
+				headers: { "Content-Type": "application/json" },
+				body: JSON.stringify({ ip, scope: "ip" }),
+			});
+			const data = await res.json();
+			resetStatus.textContent = data.ok ? "Target purged successfully." : "Purge failed.";
+			refreshAll();
+		});
+
+		document.getElementById("reset-all-btn").addEventListener("click", async () => {
+			if (!confirm("WARNING: This will obliterate all backend data. Proceed?")) return;
+			resetStatus.textContent = "Executing factory reset...";
+			const res = await fetch("/api/reset", {
+				method: "POST",
+				headers: { "Content-Type": "application/json" },
+				body: JSON.stringify({ scope: "all" }),
+			});
+			const data = await res.json();
+			resetStatus.textContent = data.ok ? "Database vaporized." : "Reset failed.";
+			refreshAll();
+		});
+
+		// Alert Action Buttons (EDR response)
+		document.addEventListener("click", async (event) => {
+			const handleToggle = event.target.closest(".alert-handle-toggle");
+			if (handleToggle) {
+				const ip = handleToggle.dataset.ip || "";
+				const alertId = handleToggle.dataset.alertId || "";
+				if (!alertId) return;
+				try {
+					const res = await fetch("/api/alerts/handle", {
+						method: "POST",
+						headers: { "Content-Type": "application/json" },
+						body: JSON.stringify({
+							ip,
+							alert_id: alertId,
+							handled: handleToggle.checked,
+						}),
+					});
+					const data = await res.json();
+					if (!data.ok) {
+						alert(`Failed to update alert status: ${data.error || "Unknown error"}`);
+						handleToggle.checked = !handleToggle.checked;
+						return;
+					}
+					refreshAlerts();
+				} catch (err) {
+					alert("Failed to update alert status");
+					handleToggle.checked = !handleToggle.checked;
+				}
+				return;
+			}
+
+			const target = event.target.closest(".alert-action");
+			if (!target) return;
+			const action = target.dataset.action || "";
+			const ip = target.dataset.ip || "";
+			if (!ip) return;
+
+			let payload = {};
+			if (action === "kill_process") {
+				const pid = target.dataset.pid || "";
+				if (!pid) { alert("No PID found in alert details"); return; }
+				payload = { pid: Number(pid) };
+			} else if (action === "close_port") {
+				const port = target.dataset.port || "";
+				if (!port) { alert("No port found in alert details"); return; }
+				payload = { port: Number(port) };
+			} else if (action === "kill_connection") {
+				const pid = target.dataset.pid || "";
+				const laddr = target.dataset.laddr || "";
+				const raddr = target.dataset.raddr || "";
+				if (!pid && !laddr && !raddr) { alert("No connection tuple found in alert details"); return; }
+				payload = {
+					pid: pid ? Number(pid) : undefined,
+					laddr: laddr || undefined,
+					raddr: raddr || undefined,
+				};
+			}
+
+			try {
+				const res = await fetch("/api/commands", {
+					method: "POST",
+					headers: { "Content-Type": "application/json" },
+					body: JSON.stringify({ ip, action, payload }),
+				});
+				const data = await res.json();
+				if (!data.ok) {
+					alert(`Action failed: ${data.error || "Unknown error"}`);
+					return;
+				}
+				alert(`Action queued: ${action} on ${ip}`);
+			} catch (err) {
+				alert("Failed to queue action");
+			}
+		});
+
+		// Connection Details Popup
+		connectionBody.addEventListener("click", (event) => {
+			const row = event.target.closest("tr");
+			if (!row) return;
+			packetModalMeta.textContent = row.dataset.meta || "-";
+			packetModalContent.textContent = row.dataset.details || "{}";
+			packetModal.style.display = "flex";
+		});
+		packetModalClose.addEventListener("click", () => {
+			packetModal.style.display = "none";
+		});
+		packetModal.addEventListener("click", (event) => {
+			if (event.target === packetModal) {
+				packetModal.style.display = "none";
+			}
+		});
+
+		// Utility Formatters
+		function parseAlertDetails(raw) {
+			if (!raw) return {};
+			if (typeof raw === "object") return raw;
+			try {
+				return JSON.parse(raw);
+			} catch (e) {
+				return {};
+			}
+		}
+
+		function extractPid(details) {
+			if (!details || typeof details !== "object") return null;
+			if (details.pid) return details.pid;
+			if (Array.isArray(details.sample) && details.sample.length && details.sample[0].pid) return details.sample[0].pid;
+			if (details.processes && typeof details.processes === "object") {
+				const entries = Object.entries(details.processes);
+				if (entries.length) return null;
+			}
+			return null;
+		}
+
+		function extractPort(details) {
+			if (!details || typeof details !== "object") return null;
+			if (details.port) return details.port;
+			if (Array.isArray(details.ports) && details.ports.length) return details.ports[0];
+			if (Array.isArray(details.sample) && details.sample.length && details.sample[0].rport) return details.sample[0].rport;
+			return null;
+		}
+
+		function extractConnection(details) {
+			if (!details || typeof details !== "object") return { pid: null, laddr: "", raddr: "" };
+			if (Array.isArray(details.sample) && details.sample.length) {
+				const first = details.sample[0] || {};
+				return {
+					pid: first.pid || null,
+					laddr: first.laddr || "",
+					raddr: first.raddr || "",
+				};
+			}
+			return { pid: null, laddr: "", raddr: "" };
+		}
+
+		function escapeHtml(value) {
+			return String(value)
+				.replace(/&/g, "&amp;")
+				.replace(/</g, "&lt;")
+				.replace(/>/g, "&gt;")
+				.replace(/"/g, "&quot;")
+				.replace(/'/g, "&#39;");
+		}
+
+		function formatBytes(value) {
+			const num = Number(value || 0);
+			if (!num) return "0 B";
+			const units = ["B", "KB", "MB", "GB", "TB"];
+			let idx = 0;
+			let n = num;
+			while (n >= 1024 && idx < units.length - 1) { n /= 1024; idx += 1; }
+			return `${n.toFixed(1)} ${units[idx]}`;
+		}
+
+		// Boot up
+		refreshAll();
+		setInterval(refreshAll, 5000);
+		function copyApiKey() {
+			const key = document.getElementById("user-api-key").innerText;
+			navigator.clipboard.writeText(key).then(() => {
+				const btn = event.target;
+				const oldText = btn.innerText;
+				btn.innerText = "Copied!";
+				setTimeout(() => btn.innerText = oldText, 2000);
+			});
+		}
+	</script>
+</body>
+
+</html>

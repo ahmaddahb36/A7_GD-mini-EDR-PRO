@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>A7._.GD mini EDR PRO | Verify Email</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root{--bg-base:#050505;--bg-surface:#0a0a0c;--bg-panel:#121214;--border:rgba(255,255,255,0.08);--border-highlight:rgba(255,255,255,0.15);--text-primary:#f4f4f5;--text-secondary:#a1a1aa;--text-muted:#71717a;--accent:#00e5ff;--critical:#ff2a55;--transition:0.3s cubic-bezier(0.4,0,0.2,1)}
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{font-family:"Inter",sans-serif;background:var(--bg-base);color:var(--text-primary);min-height:100vh;display:flex;align-items:center;justify-content:center;overflow:hidden;position:relative}
+    .bg-grid{position:fixed;inset:0;z-index:0;background-image:linear-gradient(rgba(0,229,255,0.03) 1px,transparent 1px),linear-gradient(90deg,rgba(0,229,255,0.03) 1px,transparent 1px);background-size:40px 40px;animation:gridPan 25s linear infinite}
+    @keyframes gridPan{0%{background-position:0 0}100%{background-position:40px 40px}}
+    .orb{position:fixed;z-index:0;border-radius:50%;filter:blur(80px);opacity:.12;pointer-events:none}
+    .orb-1{width:400px;height:400px;background:var(--accent);top:-100px;left:-100px;animation:orbFloat 8s ease-in-out infinite alternate}
+    .orb-2{width:300px;height:300px;background:#7c3aed;bottom:-80px;right:-80px;animation:orbFloat 11s ease-in-out infinite alternate-reverse}
+    @keyframes orbFloat{from{transform:translate(0,0)}to{transform:translate(40px,30px)}}
+    .card{position:relative;z-index:1;background:var(--bg-panel);border:1px solid var(--border-highlight);border-radius:20px;padding:44px;width:100%;max-width:420px;box-shadow:0 0 0 1px rgba(0,229,255,0.06),0 24px 64px rgba(0,0,0,0.7);animation:cardIn .5s cubic-bezier(0.16,1,0.3,1) both;text-align:center}
+    @keyframes cardIn{from{opacity:0;transform:translateY(24px) scale(0.97)}to{opacity:1;transform:translateY(0) scale(1)}}
+    .icon-wrap{width:72px;height:72px;border-radius:50%;background:rgba(0,229,255,0.08);border:1px solid rgba(0,229,255,0.2);display:flex;align-items:center;justify-content:center;margin:0 auto 24px}
+    .icon-wrap svg{width:32px;height:32px;color:var(--accent)}
+    .card-title{font-family:"Space Grotesk",sans-serif;font-size:22px;font-weight:700;margin-bottom:8px}
+    .card-sub{font-size:13px;color:var(--text-muted);margin-bottom:6px}
+    .email-shown{font-family:"IBM Plex Mono",monospace;font-size:13px;color:var(--accent);margin-bottom:28px}
+    .code-inputs{display:flex;gap:10px;justify-content:center;margin-bottom:24px}
+    .code-inputs input{width:48px;height:58px;text-align:center;font-size:22px;font-weight:700;font-family:"IBM Plex Mono",monospace;background:var(--bg-surface);border:1px solid var(--border);border-radius:10px;color:var(--text-primary);outline:none;transition:border-color var(--transition),box-shadow var(--transition);caret-color:var(--accent)}
+    .code-inputs input:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(0,229,255,0.12)}
+    #hidden-code{display:none}
+    .error-banner{display:flex;align-items:center;gap:10px;background:rgba(255,42,85,0.1);border:1px solid rgba(255,42,85,0.3);border-radius:10px;padding:12px 14px;margin-bottom:18px;font-size:13px;color:var(--critical);text-align:left;animation:shake .35s ease}
+    @keyframes shake{0%,100%{transform:translateX(0)}20%,60%{transform:translateX(-5px)}40%,80%{transform:translateX(5px)}}
+    .error-banner svg{width:16px;height:16px;flex-shrink:0}
+    .btn-main{width:100%;padding:13px;background:linear-gradient(135deg,rgba(0,229,255,0.15),rgba(0,229,255,0.08));border:1px solid rgba(0,229,255,0.35);border-radius:10px;color:var(--accent);font-size:14px;font-weight:600;font-family:"Space Grotesk",sans-serif;letter-spacing:.04em;cursor:pointer;transition:background var(--transition),box-shadow var(--transition),transform var(--transition);display:flex;align-items:center;justify-content:center;gap:8px}
+    .btn-main:hover{background:linear-gradient(135deg,rgba(0,229,255,0.25),rgba(0,229,255,0.15));box-shadow:0 0 20px rgba(0,229,255,0.25);transform:translateY(-1px)}
+    .btn-main svg{width:16px;height:16px}
+    .hint{margin-top:20px;font-family:"IBM Plex Mono",monospace;font-size:12px;color:var(--text-muted)}
+    .hint a{color:var(--accent);text-decoration:none}
+    .hint a:hover{text-decoration:underline}
+  </style>
+</head>
+<body>
+  <div class="bg-grid"></div>
+  <div class="orb orb-1"></div>
+  <div class="orb orb-2"></div>
+  <div class="card">
+    <div class="icon-wrap">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
+    </div>
+    <p class="card-title">Verify Your Email</p>
+    <p class="card-sub">We sent a 6-digit code to</p>
+    <p class="email-shown">{{ email }}</p>
+
+    {% if error %}
+    <div class="error-banner">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+      {{ error }}
+    </div>
+    {% endif %}
+
+    <form method="POST" action="/verify" id="verify-form">
+      <!-- visible digit boxes -->
+      <div class="code-inputs">
+        <input type="text" maxlength="1" class="digit" inputmode="numeric" pattern="[0-9]" />
+        <input type="text" maxlength="1" class="digit" inputmode="numeric" pattern="[0-9]" />
+        <input type="text" maxlength="1" class="digit" inputmode="numeric" pattern="[0-9]" />
+        <input type="text" maxlength="1" class="digit" inputmode="numeric" pattern="[0-9]" />
+        <input type="text" maxlength="1" class="digit" inputmode="numeric" pattern="[0-9]" />
+        <input type="text" maxlength="1" class="digit" inputmode="numeric" pattern="[0-9]" />
+      </div>
+      <!-- actual hidden input sent to server -->
+      <input type="hidden" name="code" id="hidden-code" />
+
+      <button type="submit" class="btn-main" id="submit-btn" disabled>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        Verify &amp; Continue
+      </button>
+    </form>
+
+    <p class="hint">Didn't receive the email? Check spam or <a href="/register">try again</a></p>
+    <div style="margin-top: 25px; text-align: center; font-family: 'IBM Plex Mono', monospace; font-size: 10px; color: var(--text-muted); opacity: 0.5;">
+      Developed by <a href="https://github.com/ahmaddahb36" target="_blank" style="color: inherit; text-decoration: none;">A7_GD</a>
+    </div>
+  </div>
+
+  <script>
+    const digits = document.querySelectorAll('.digit');
+    const hiddenCode = document.getElementById('hidden-code');
+    const submitBtn = document.getElementById('submit-btn');
+
+    digits.forEach((inp, idx) => {
+      inp.addEventListener('input', () => {
+        inp.value = inp.value.replace(/\D/g,'').slice(-1);
+        if (inp.value && idx < digits.length - 1) digits[idx+1].focus();
+        syncCode();
+      });
+      inp.addEventListener('keydown', e => {
+        if (e.key === 'Backspace' && !inp.value && idx > 0) digits[idx-1].focus();
+      });
+      inp.addEventListener('paste', e => {
+        e.preventDefault();
+        const paste = (e.clipboardData.getData('text')).replace(/\D/g,'').slice(0,6);
+        paste.split('').forEach((ch,i) => { if(digits[i]) digits[i].value = ch; });
+        if(digits[paste.length-1]) digits[paste.length-1].focus();
+        syncCode();
+      });
+    });
+
+    function syncCode() {
+      const code = [...digits].map(d=>d.value).join('');
+      hiddenCode.value = code;
+      submitBtn.disabled = code.length < 6;
+    }
+
+    // auto-focus first box
+    digits[0].focus();
+  </script>
+</body>
+</html>

@@ -1,0 +1,6 @@
+
+SERVER_IP = "edr.a7gd.tech"
+#SERVER_IP = "127.0.0.1"
+PORT = 9999
+INTERVAL = 10
+AGENT_KEY = "53266b43fbaa4eeeb8015b81d8bddccc"
