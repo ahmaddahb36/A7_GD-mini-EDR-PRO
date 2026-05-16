@@ -24,10 +24,10 @@ app = Flask(__name__)
 app.secret_key = os.environ.get("FLASK_SECRET_KEY", "A7gd-edr-s3cr3t-k3y-2024!")
 
 # ── Email config (set these as environment variables on the server) ───────────
-MAIL_USER = os.environ.get("MAIL_USER", "stand7738@gmail.com")   # your Gmail address
-MAIL_PASS = os.environ.get("MAIL_PASS", "ejksuwluvvuawzsh")   # your App Password
+MAIL_USER = os.environ.get("MAIL_USER", "<GMAIL>")   # your Gmail address
+MAIL_PASS = os.environ.get("MAIL_PASS", "<PASSWORD>")   # your App Password
 MAIL_FROM = os.environ.get("MAIL_USER", "A7._.GD mini EDR PRO")
-BASE_URL  = os.environ.get("BASE_URL",  "http://194.37.82.174:5000") # in server BASE_URL  = os.environ.get("BASE_URL",  "http://edr.a7gd.tech/")
+BASE_URL  = os.environ.get("BASE_URL",  "http://127.0.0.1:5000") # in server BASE_URL  = os.environ.get("BASE_URL",  "http://edr.a7gd.tech/")
 
 # ── Flask-Login ───────────────────────────────────────────────────────────────
 login_manager = LoginManager(app)

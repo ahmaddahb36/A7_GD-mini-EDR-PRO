@@ -139,3 +139,4 @@ Invoke-RestMethod "http://127.0.0.1:5000/api/indicators/summary"
 3. شغّل `agent/core/agent.py`
 4. افتح `http://127.0.0.1:5000`
 
+عدل ملف app.py عدل بيانات حسابك لتوثيق الحساب
