@@ -2,7 +2,7 @@
 
 <img src="SnapShot/image.png" alt="A7 Mini EDR Pro Logo" width="180"/>
 
-# A7 Mini EDR Pro
+# A7._.GD Mini EDR Pro
 
 ### A lightweight, cross-platform Endpoint Detection & Response system
 ### built with Python — Agent on Linux · Server & Dashboard on Windows
